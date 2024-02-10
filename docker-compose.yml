@@ -24,6 +24,8 @@ services:
       - PORT=3000
     volumes:
       - .:/app
+    depends_on:
+      - db
     deploy:
       resources:
         limits:
