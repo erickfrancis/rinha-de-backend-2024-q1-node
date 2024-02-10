@@ -1,0 +1,38 @@
+{
+  "name": "rinha-de-backend-2024-q1-node",
+  "version": "0.0.1",
+  "description": "Rinha de Backend 2024 Q1 - NodeJS",
+  "main": "src/server.mjs",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "eslint:fix": "eslint -c .eslintrc.json --ext .mjs --fix src/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erickfrancis/rinha-de-backend-2024-q1-node.git"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "Erick Francis",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/erickfrancis/rinha-de-backend-2024-q1-node/issues"
+  },
+  "homepage": "https://github.com/erickfrancis/rinha-de-backend-2024-q1-node#readme",
+  "dependencies": {
+    "fastify": "^4.26.0",
+    "knex": "^3.1.0",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
+    "eslint-plugin-promise": "^6.0.0"
+  }
+}
