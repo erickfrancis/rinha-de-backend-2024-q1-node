@@ -4,7 +4,7 @@ export default function (fastify, opts, done) {
   fastify.get('/database', async (_, reply) => {
     const check = async () => {
       try {
-        await fastify.service.Database.read
+        await fastify.service.Database.client
           .raw('select 1+1 as result')
 
         return true

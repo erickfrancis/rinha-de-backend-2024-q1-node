@@ -1,9 +1,12 @@
 import Fastify from 'fastify'
+import Services from './services/index.mjs'
 import Routes from './routes/index.mjs'
 
 export const app = Fastify({
   trustProxy: true
 })
+
+app.decorate('service', new Services())
 
 Routes(app)
 

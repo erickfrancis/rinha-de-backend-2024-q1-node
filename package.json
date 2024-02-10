@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node src/server.mjs",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "eslint:fix": "eslint -c .eslintrc.json --ext .mjs --fix src/"
+    "eslint:fix": "eslint -c .eslintrc.json --ext .mjs --fix src/",
+    "knex": "node --experimental-modules ./node_modules/.bin/knex --cwd src/database --esm --knexfile config.mjs $@"
   },
   "repository": {
     "type": "git",
