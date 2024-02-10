@@ -1,14 +1,59 @@
+const transactionTypes = ['c', 'd']
+
 export default function (fastify, opts, done) {
   fastify.post('/transacoes', async (request, reply) => {
-    const data = {
-      valor: 1000,
-      tipo: 'c',
-      descricao: 'descricao'
+    const { tipo, descricao } = request.body
+    const valor = Number(request.body.valor)
+    const clientId = request.params.client_id
+
+    if (!descricao || descricao.length > 10 || descricao.length === 0) {
+      return reply.code(422).send()
     }
 
+    if (!Number.isInteger(valor)) {
+      return reply.code(422).send()
+    }
+
+    if (!transactionTypes.includes(tipo)) {
+      return reply.code(422).send()
+    }
+
+    const client = await fastify.service.Database.knex('client')
+      .select(['limit', 'balance'])
+      .where('id', clientId)
+      .first()
+
+    if (!client) {
+      return reply.code(404).send()
+    }
+
+    const saldo = tipo === 'c'
+      ? client.balance + Math.abs(valor)
+      : client.balance - Math.abs(valor)
+
+    if (client.limit < Math.abs(saldo)) {
+      return reply.code(422).send()
+    }
+
+    await fastify.service.Database.knex('transaction')
+      .insert(
+        {
+          amount: valor,
+          type: tipo,
+          description: descricao,
+          client_id: clientId
+        }
+      )
+
+    await fastify.service.Database.knex('client')
+      .where('id', clientId)
+      .update({
+        balance: saldo
+      })
+
     reply.send({
-      limite: 100000,
-      saldo: -9098
+      limite: client.limit,
+      saldo
     })
   })
 

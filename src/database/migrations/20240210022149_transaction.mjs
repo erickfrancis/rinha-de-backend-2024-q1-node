@@ -3,12 +3,14 @@
  * @returns { Promise<void> }
  */
 export const up = async (knex) => {
-  return knex.schema.createTable('client', (table) => {
+  return knex.schema.createTable('transaction', (table) => {
     table.increments()
 
-    table.string('name').notNullable()
-    table.integer('limit').defaultTo(0)
-    table.integer('balance').defaultTo(0)
+    table.integer('amount').defaultTo(0)
+    table.integer('client_id').defaultTo(0)
+    table.enum('type', ['c', 'd']).notNullable()
+    table.string('description', 10)
+
     table.timestamp('date_create')
       .defaultTo(knex.fn.now())
   })
@@ -19,5 +21,5 @@ export const up = async (knex) => {
  * @returns { Promise<void> }
  */
 export const down = async (knex) => {
-  return knex.schema.dropTable('client')
+  return knex.schema.dropTable('transaction')
 }

@@ -1,13 +1,12 @@
-
 import DatabaseConfig from '../database/config.mjs'
 import knex from 'knex'
 
 export default class Service {
-  #client
+  #knex
 
   constructor () {
-    this.#client = knex(DatabaseConfig)
+    this.#knex = knex(DatabaseConfig)
   }
 
-  get client () { return this.#client }
+  get knex () { return this.#knex }
 }
