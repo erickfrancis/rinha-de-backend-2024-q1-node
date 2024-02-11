@@ -31,7 +31,7 @@ export default function (fastify, opts, done) {
       ? client.balance + Math.abs(valor)
       : client.balance - Math.abs(valor)
 
-    if (client.limit < Math.abs(saldo)) {
+    if ((-1 * client.limit) > saldo) {
       return reply.code(422).send()
     }
 
@@ -58,26 +58,36 @@ export default function (fastify, opts, done) {
   })
 
   fastify.get('/extrato', async (request, reply) => {
+    const clientId = request.params.client_id
+
+    const client = await fastify.service.Database.knex('client')
+      .select(['limit', 'balance'])
+      .where('id', clientId)
+      .first()
+
+    if (!client) {
+      return reply.code(404).send()
+    }
+
+    const transactions = await fastify.service.Database.knex('transaction')
+      .where('client_id', clientId)
+      .orderBy('date_create', 'desc')
+      .limit(10)
+
     reply.send({
       saldo: {
-        total: -9098,
-        data_extrato: '2024-01-17T02:34:41.217753Z',
-        limite: 100000
+        total: client.balance,
+        data_extrato: new Date(),
+        limite: client.limit
       },
-      ultimas_transacoes: [
-        {
-          valor: 10,
-          tipo: 'c',
-          descricao: 'descricao',
-          realizada_em: '2024-01-17T02:34:38.543030Z'
-        },
-        {
-          valor: 90000,
-          tipo: 'd',
-          descricao: 'descricao',
-          realizada_em: '2024-01-17T02:34:38.543030Z'
-        }
-      ]
+      ultimas_transacoes: transactions.map(
+        transaction => ({
+          valor: transaction.amount,
+          tipo: transaction.type,
+          descricao: transaction.description,
+          realizada_em: transaction.date_create
+        })
+      )
     })
   })
 
